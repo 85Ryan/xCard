@@ -1,0 +1,504 @@
+.xcard-inject-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  color: white;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.xcard-inject-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+.xcard-inject-btn svg {
+  color: #fff;
+}
+
+/* --- Menu Item (X-like) --- */
+.xcard-menu-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  color: var(--xcard-text-primary);
+}
+
+.xcard-menu-item:hover {
+  background-color: var(--xcard-bg-hover);
+}
+
+.xcard-menu-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  width: 20px;
+  color: var(--xcard-text-secondary);
+}
+
+.xcard-menu-item-text {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Theme variables for injection */
+:root {
+  --xcard-text-primary: rgb(15, 20, 25);
+  --xcard-text-secondary: rgb(83, 100, 113);
+  --xcard-bg-hover: rgba(15, 20, 25, 0.1);
+  --xcard-modal-bg: #ffffff;
+  --xcard-border: #eeeeee;
+  --xcard-sidebar-bg: #f9f9f9;
+  --xcard-control-bg: #f0f0f0;
+}
+
+[data-twitter-variant="dim"] {
+  --xcard-text-primary: rgb(247, 249, 249);
+  --xcard-text-secondary: rgb(139, 152, 165);
+  --xcard-bg-hover: rgba(247, 249, 249, 0.1);
+  --xcard-modal-bg: #15202b;
+  --xcard-border: #38444d;
+  --xcard-sidebar-bg: #192734;
+  --xcard-control-bg: #22303c;
+}
+
+[data-twitter-variant="dark"] {
+  --xcard-text-primary: rgb(231, 233, 234);
+  --xcard-text-secondary: rgb(113, 118, 123);
+  --xcard-bg-hover: rgba(231, 233, 234, 0.1);
+  --xcard-modal-bg: #000000;
+  --xcard-border: #2f3336;
+  --xcard-sidebar-bg: #000000;
+  --xcard-control-bg: #16181c;
+}
+
+/* --- Overlay & Modal --- */
+.xcard-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: xcard-fade-in 0.3s ease;
+}
+
+@keyframes xcard-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.xcard-modal {
+  background: var(--xcard-modal-bg);
+  border: 1px solid var(--xcard-border);
+  width: 90vw;
+  height: 90vh;
+  max-width: 1400px;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  animation: xcard-slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--xcard-text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+@keyframes xcard-slide-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.xcard-header {
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--xcard-border);
+  background: var(--xcard-modal-bg);
+  position: relative;
+  z-index: 10;
+}
+
+.xcard-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 18px;
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.xcard-sparkle {
+  color: #6366f1;
+}
+
+.xcard-close {
+  background: var(--xcard-control-bg);
+  border: none;
+  color: var(--xcard-text-secondary);
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.xcard-close:hover {
+  background: var(--xcard-bg-hover);
+  color: var(--xcard-text-primary);
+}
+
+.xcard-body {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.xcard-preview-area {
+  flex: 1;
+  background: var(--xcard-control-bg);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 80px 40px 40px 40px;
+  overflow: auto;
+  transition: background 0.3s ease;
+}
+
+/* --- Card UI Adjustments --- */
+.xcard-tweet-card {
+  position: relative;
+  background: white;
+  color: black;
+  padding: 32px;
+  border-radius: 20px;
+  width: 600px !important;
+  /* Forced fixed width */
+  min-width: 600px !important;
+  max-width: 600px !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  /* Prevent shrinking */
+}
+
+.xcard-tweet-card.xcard-dark {
+  background: #000;
+  color: white;
+  border: 1px solid #333;
+}
+
+.xcard-x-logo {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  color: #000;
+}
+
+.xcard-dark .xcard-x-logo {
+  color: #fff;
+}
+
+.xcard-tweet-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.xcard-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.xcard-verified-icon {
+  color: rgb(29, 155, 240);
+  fill: currentColor;
+}
+
+.xcard-user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.xcard-name-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.xcard-display-name {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.xcard-handle {
+  color: #666;
+  font-size: 14px;
+}
+
+.xcard-tweet-content {
+  font-size: 16px;
+  line-height: 1.4;
+  margin-bottom: 24px;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.xcard-highlight {
+  color: rgb(29, 155, 240);
+}
+
+.xcard-tweet-media {
+  margin-top: 12px;
+  display: grid;
+  gap: 8px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.xcard-tweet-media img {
+  width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.xcard-time-row {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #536471;
+  font-size: 15px;
+}
+
+.xcard-dot {
+  color: #536471;
+  font-weight: bold;
+}
+
+.xcard-dark .xcard-time-row,
+.xcard-dark .xcard-time,
+.xcard-dark .xcard-views,
+.xcard-dark .xcard-dot {
+  color: #71767b;
+}
+
+.xcard-tweet-footer {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+  margin-bottom: 24px;
+}
+
+.xcard-dark .xcard-tweet-footer {
+  border-top-color: #2f3336;
+}
+
+
+
+.xcard-metrics {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+
+.xcard-metric-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #536471;
+  font-size: 14px;
+}
+
+.xcard-watermark {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: #f7f9f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #999;
+  text-transform: uppercase;
+}
+
+.xcard-dark .xcard-watermark {
+  background: #16181c;
+  color: #536471;
+}
+
+.xcard-card-container {
+  padding: 60px;
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+  margin: auto;
+}
+
+/* --- Controls --- */
+.xcard-controls {
+  padding: 24px;
+  background: var(--xcard-sidebar-bg);
+  border-left: 1px solid var(--xcard-border);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow-y: auto;
+}
+
+.xcard-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.xcard-section label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #999;
+}
+
+.xcard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.xcard-swatch {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.xcard-swatch.active {
+  border-color: #6366f1;
+  transform: scale(1.1);
+}
+
+.xcard-toggle-group {
+  display: flex;
+  background: var(--xcard-control-bg);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid var(--xcard-border);
+}
+
+.xcard-toggle-group button {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--xcard-text-secondary);
+  padding: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.xcard-toggle-group button.active {
+  background: var(--xcard-modal-bg);
+  color: var(--xcard-text-primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.xcard-toggle-group button:hover:not(.active) {
+  background: var(--xcard-bg-hover);
+}
+
+.xcard-actions {
+  margin-top: auto;
+  display: grid;
+  gap: 12px;
+}
+
+.xcard-btn-primary {
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.xcard-btn-secondary {
+  background: var(--xcard-control-bg);
+  color: var(--xcard-text-primary);
+  border: 1px solid var(--xcard-border);
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.xcard-btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.xcard-btn-secondary:hover {
+  background: var(--xcard-bg-hover);
+}
