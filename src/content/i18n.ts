@@ -25,13 +25,13 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
         footer: 'Go to X.com to start creating cards.'
     },
     'zh-CN': {
-        createdWith: '由 xCard 生成',
+        createdWith: 'Created with xCard',
         background: '背景风格',
         appearance: '外观设置',
         light: '浅色',
         dark: '深色',
-        glass: '毛玻璃',
-        simulateLiked: '模拟已点赞',
+        glass: '玻璃',
+        simulateLiked: '模拟点赞',
         showContext: '显示上下文',
         exportCardOnly: '仅导出卡片',
         copySuccess: '已复制到剪贴板！',
@@ -48,13 +48,13 @@ const TRANSLATIONS: Record<string, Record<string, string>> = {
         footer: '前往 X.com 开始制作卡片。'
     },
     'zh-TW': {
-        createdWith: '由 xCard 生成',
+        createdWith: 'Created with xCard',
         background: '背景風格',
         appearance: '外觀設定',
         light: '淺色',
         dark: '深色',
-        glass: '毛玻璃',
-        simulateLiked: '模擬已按讚',
+        glass: '玻璃',
+        simulateLiked: '模擬按讚',
         showContext: '顯示上下文',
         exportCardOnly: '僅導出卡片',
         copySuccess: '已複製到剪貼簿！',
