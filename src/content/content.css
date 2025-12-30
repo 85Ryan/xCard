@@ -461,7 +461,7 @@
   justify-content: center;
   font-size: 11px;
   font-weight: 400;
-  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family: 'Courier New', Courier, monospace;
   letter-spacing: 2px;
   color: #A8A8A8;
   text-transform: uppercase;

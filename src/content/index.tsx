@@ -122,7 +122,12 @@ const processTweetContent = (contentEl: Element | null): string => {
             const text = el.innerText;
 
             // Emoji support
-            if (el.tagName === 'IMG' && el.classList.contains('emoji')) {
+            const isEmoji = el.tagName === 'IMG' && (
+                el.classList.contains('emoji') ||
+                (el as HTMLImageElement).src.includes('emoji')
+            );
+
+            if (isEmoji) {
                 html += (el as HTMLImageElement).alt || '';
                 return;
             }
@@ -237,7 +242,17 @@ function extractTweetData(article: Element): TweetData | null {
         };
 
         // Extract Quoted Tweet
-        const quoteEl = article.querySelector('div[role="link"]:not([data-testid="tweetText"] div)');
+        // Robust strategy: Find all link roles that look like tweet containers
+        // We look for a container that has User-Name and is NOT the main tweet text container
+        const allLinks = Array.from(article.querySelectorAll('div[role="link"]'));
+        const quoteEl = allLinks.find(el => {
+            // Must contain a user name to be a valid quote block
+            const hasUserName = !!el.querySelector('[data-testid="User-Name"]');
+            // Must not be a simple text wrapper inside the main tweet
+            const isInsideMainText = el.closest('[data-testid="tweetText"]') !== null;
+            return hasUserName && !isInsideMainText;
+        });
+
         let quotedTweet: SubTweet | undefined;
         if (quoteEl) {
             const qDisplayName = quoteEl.querySelector('[data-testid="User-Name"] span')?.textContent || '';
@@ -253,6 +268,7 @@ function extractTweetData(article: Element): TweetData | null {
             const qIsVerified = !!quoteEl.querySelector('svg[aria-label="Verified account"], svg[aria-label="认证账号"], svg[aria-label="Premium"]');
             const qVerificationType = qIsGold ? 'gold' : (qIsVerified ? 'blue' : 'none');
 
+            // Only consider it valid if we found at least a display name
             if (qDisplayName) {
                 quotedTweet = {
                     displayName: qDisplayName,
