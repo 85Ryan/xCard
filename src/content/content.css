@@ -378,6 +378,12 @@
   display: block;
 }
 
+.xcard-tweet-media.multi-image img {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  height: 100%;
+}
+
 .xcard-tweet-video {
   position: relative;
   margin-top: 12px;

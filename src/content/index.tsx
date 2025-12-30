@@ -537,7 +537,8 @@ const EditorOverlay = ({ data, onClose }: { data: TweetData, onClose: () => void
                     margin: '0',
                     transform: 'none',
                     left: '0',
-                    top: '0'
+                    top: '0',
+                    boxShadow: transparentExport ? 'none' : undefined
                 }
             });
             const link = document.createElement('a');
@@ -591,7 +592,8 @@ const EditorOverlay = ({ data, onClose }: { data: TweetData, onClose: () => void
                     margin: '0',
                     transform: 'none',
                     left: '0',
-                    top: '0'
+                    top: '0',
+                    boxShadow: transparentExport ? 'none' : undefined
                 }
             });
             if (blob) {
@@ -707,7 +709,7 @@ const EditorOverlay = ({ data, onClose }: { data: TweetData, onClose: () => void
                                 <div className="xcard-tweet-content" dangerouslySetInnerHTML={{ __html: data.content }} />
 
                                 {processedData.media.length > 0 && !processedData.videoPoster && (
-                                    <div className="xcard-tweet-media" style={{ gridTemplateColumns: data.media.length > 1 ? '1fr 1fr' : '1fr' }}>
+                                    <div className={`xcard-tweet-media ${processedData.media.length > 1 ? 'multi-image' : ''}`} style={{ gridTemplateColumns: processedData.media.length > 1 ? '1fr 1fr' : '1fr' }}>
                                         {processedData.media.map((url, i) => (
                                             <img key={i} src={url} alt="media" />
                                         ))}
