@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
-import { X, Download, Copy, Paintbrush, Palette, Sun, Moon } from 'lucide-react';
+import { X, Download, Copy, Paintbrush, Palette, Sun, Moon, AppWindowMac, CheckCircle, AlertCircle } from 'lucide-react';
 import { toPng, toBlob } from 'html-to-image';
 import { t } from './i18n';
 import './content.css';
@@ -383,6 +383,12 @@ const EditorOverlay = ({ data, onClose }: { data: TweetData, onClose: () => void
     const [transparentExport, setTransparentExport] = useState(false);
     const [nativeTheme, setNativeTheme] = useState<string>('light');
     const [processedData, setProcessedData] = useState<TweetData>(data);
+    const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
+
+    // For Glass Blur Export
+    const [glassBackground, setGlassBackground] = useState<string | null>(null);
+    const [captureMode, setCaptureMode] = useState<'normal' | 'background-only'>('normal');
+
     const cardRef = useRef<HTMLDivElement>(null);
 
     // Initial Setup: Scroll Lock & Native Theme Detection
@@ -437,21 +443,51 @@ const EditorOverlay = ({ data, onClose }: { data: TweetData, onClose: () => void
         processImages();
     }, [data]);
 
+    // Toast Auto-Dismiss
+    useEffect(() => {
+        if (toast) {
+            const timer = setTimeout(() => setToast(null), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [toast]);
+
     const handleDownload = async () => {
         if (!cardRef.current) return;
         setIsExporting(true);
+
         try {
             await new Promise(resolve => setTimeout(resolve, 200));
-            // Select correct node: full container or just the card
+
             const node = transparentExport
                 ? cardRef.current.querySelector('.xcard-tweet-card') as HTMLElement
                 : cardRef.current;
 
             if (!node) throw new Error("Node not found");
 
+            // --- DOUBLE CAPTURE STRATEGY FOR GLASS THEME ---
+            // If Glass theme (and NOT transparent export), we manually capture the background first
+            if (theme === 'glass' && !transparentExport) {
+                // 1. Hide Content, Show only Background
+                setCaptureMode('background-only');
+                await new Promise(resolve => setTimeout(resolve, 100)); // Wait for render
+
+                // Capture the container (background only)
+                const bgUrl = await toPng(cardRef.current, {
+                    cacheBust: false,
+                    pixelRatio: 2,
+                    skipFonts: true, // Speed optimization
+                });
+
+                // 2. Set as blurred background image
+                setGlassBackground(bgUrl);
+                setCaptureMode('normal');
+                await new Promise(resolve => setTimeout(resolve, 100)); // Wait for render
+            }
+            // ----------------------------------------------
+
             // Explicitly calculate dimensions and strip styles that might confuse clones
             const dataUrl = await toPng(node, {
-                cacheBust: true,
+                cacheBust: false,
                 pixelRatio: 2,
                 skipFonts: false,
                 width: node.offsetWidth,
@@ -467,11 +503,14 @@ const EditorOverlay = ({ data, onClose }: { data: TweetData, onClose: () => void
             link.download = `tweet-card-${data.handle}${transparentExport ? '-transparent' : ''}.png`;
             link.href = dataUrl;
             link.click();
+            setToast({ message: t('copySuccess').replace('clipboard', 'disk'), type: 'success' });
         } catch (err) {
             console.error('Failed to export image:', err);
-            alert(t('downloadFail'));
+            setToast({ message: t('downloadFail'), type: 'error' });
         } finally {
             setIsExporting(false);
+            setGlassBackground(null); // Cleanup
+            setCaptureMode('normal');
         }
     };
 
@@ -485,8 +524,25 @@ const EditorOverlay = ({ data, onClose }: { data: TweetData, onClose: () => void
 
             if (!node) throw new Error("Node not found");
 
+            // --- DOUBLE CAPTURE STRATEGY FOR GLASS THEME ---
+            if (theme === 'glass' && !transparentExport) {
+                setCaptureMode('background-only');
+                await new Promise(resolve => setTimeout(resolve, 100));
+
+                const bgUrl = await toPng(cardRef.current, {
+                    cacheBust: false,
+                    pixelRatio: 2,
+                    skipFonts: true,
+                });
+
+                setGlassBackground(bgUrl);
+                setCaptureMode('normal');
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+            // ----------------------------------------------
+
             const blob = await toBlob(node, {
-                cacheBust: true,
+                cacheBust: false,
                 pixelRatio: 2,
                 width: node.offsetWidth,
                 height: node.offsetHeight,
@@ -501,13 +557,15 @@ const EditorOverlay = ({ data, onClose }: { data: TweetData, onClose: () => void
                 await navigator.clipboard.write([
                     new ClipboardItem({ 'image/png': blob })
                 ]);
-                alert(t('copySuccess'));
+                setToast({ message: t('copySuccess'), type: 'success' });
             }
         } catch (err) {
             console.error('Failed to copy image:', err);
-            alert(t('copyFail'));
+            setToast({ message: t('copyFail'), type: 'error' });
         } finally {
             setIsExporting(false);
+            setGlassBackground(null);
+            setCaptureMode('normal');
         }
     };
 
@@ -538,7 +596,7 @@ const EditorOverlay = ({ data, onClose }: { data: TweetData, onClose: () => void
                     <div className="xcard-preview-area">
                         <div
                             ref={cardRef}
-                            className="xcard-card-container"
+                            className={`xcard-card-container ${isExporting ? 'xcard-exporting' : ''}`}
                             style={{ background, padding: PADDINGS[padding] }}
                         >
                             {/* Texture layer */}
@@ -547,7 +605,16 @@ const EditorOverlay = ({ data, onClose }: { data: TweetData, onClose: () => void
                             <div className={`xcard-bg-glow xcard-glow-1`} />
                             <div className={`xcard-bg-glow xcard-glow-2`} />
 
-                            <div className={`xcard-tweet-card ${theme === 'dark' ? 'xcard-dark' : theme === 'glass' ? 'xcard-glass' : ''}`}>
+                            <div className={`xcard-tweet-card ${theme === 'dark' ? 'xcard-dark' : theme === 'glass' ? 'xcard-glass' : ''} ${captureMode === 'background-only' ? 'xcard-hide-content' : ''}`}>
+
+                                {/* FAKE BLUR BACKGROUND LAYER (Only visible during 2nd pass of export) */}
+                                {glassBackground && (
+                                    <div className="xcard-fake-blur-bg">
+                                        <img src={glassBackground} alt="" />
+                                        <div className="xcard-fake-blur-overlay" />
+                                    </div>
+                                )}
+
                                 <XLogo
                                     className="xcard-x-logo"
                                     size={24}
@@ -619,19 +686,19 @@ const EditorOverlay = ({ data, onClose }: { data: TweetData, onClose: () => void
 
                                 {showContext && data.quotedTweet && (
                                     <div className="xcard-quote">
-                                        <div className="xcard-tweet-header" style={{ marginBottom: '8px' }}>
+                                        <div className="xcard-tweet-header" style={{ marginBottom: '6px' }}>
                                             <img
                                                 src={data.quotedTweet.avatar}
                                                 className="xcard-avatar"
-                                                style={{ width: '20px', height: '20px', marginRight: '6px' }}
+                                                style={{ width: '20px', height: '20px', marginRight: '4px' }}
                                                 alt={data.quotedTweet.displayName}
                                             />
-                                            <div className="xcard-user-info" style={{ flexDirection: 'row', alignItems: 'center', gap: '4px' }}>
+                                            <div className="xcard-user-info" style={{ flexDirection: 'row', alignItems: 'center', gap: '2px' }}>
                                                 <span className="xcard-display-name" style={{ fontSize: '14px' }}>{data.quotedTweet.displayName}</span>
                                                 {data.quotedTweet.verificationType !== 'none' && (
                                                     <XIcon type={data.quotedTweet.verificationType === 'gold' ? 'verifiedGold' : 'verifiedBlue'} size={14} />
                                                 )}
-                                                <span className="xcard-handle" style={{ fontSize: '13px' }}>{data.quotedTweet.handle}</span>
+                                                <span className="xcard-handle" style={{ fontSize: '12px' }}>{data.quotedTweet.handle}</span>
                                             </div>
                                         </div>
 
@@ -723,7 +790,7 @@ const EditorOverlay = ({ data, onClose }: { data: TweetData, onClose: () => void
                                     <Moon size={14} /> <span>{t('dark')}</span>
                                 </button>
                                 <button className={theme === 'glass' ? 'active' : ''} onClick={() => setTheme('glass')}>
-                                    <Palette size={14} /> <span>{t('glass')}</span>
+                                    <AppWindowMac size={14} /> <span>{t('glass')}</span>
                                 </button>
                             </div>
                             <div className="xcard-toggle-item">
@@ -764,6 +831,13 @@ const EditorOverlay = ({ data, onClose }: { data: TweetData, onClose: () => void
                         </div>
                     </div>
                 </div>
+
+                {toast && (
+                    <div className={`xcard-toast ${toast.type}`}>
+                        {toast.type === 'success' ? <CheckCircle size={18} /> : <AlertCircle size={18} />}
+                        <span>{toast.message}</span>
+                    </div>
+                )}
             </div>
         </div>
     );

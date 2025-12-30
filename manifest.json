@@ -8,7 +8,19 @@
         "clipboardWrite"
     ],
     "action": {
-        "default_popup": "index.html"
+        "default_popup": "index.html",
+        "default_icon": {
+            "16": "src/assets/xCard_logo.png",
+            "32": "src/assets/xCard_logo.png",
+            "48": "src/assets/xCard_logo.png",
+            "128": "src/assets/xCard_logo.png"
+        }
+    },
+    "icons": {
+        "16": "src/assets/xCard_logo.png",
+        "32": "src/assets/xCard_logo.png",
+        "48": "src/assets/xCard_logo.png",
+        "128": "src/assets/xCard_logo.png"
     },
     "content_scripts": [
         {
