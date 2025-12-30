@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X 推文卡片 APP 图标 - 高清导出版</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 html-to-image 库用于导出 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
+    <style>
+        body {
+            background-color: #f3f4f6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        .icon-wrapper {
+            padding: 40px;
+            background: #f3f4f6;
+        }
+        #export-target {
+            position: relative;
+            width: 512px;
+            height: 512px;
+            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.4), 0 30px 60px -30px rgba(0,0,0,0.5);
+            overflow: hidden;
+            background: #000;
+        }
+        .label {
+            margin-top: 2rem;
+            color: #4b5563;
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+        .btn-export {
+            margin-top: 20px;
+            background: #1DA1F2;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-export:hover {
+            background: #1991db;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(29, 161, 242, 0.3);
+        }
+        .btn-export:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="icon-wrapper">
+        <div id="export-target">
+            <!-- SVG Icon Start -->
+            <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <!-- 背景：极深色径向渐变 -->
+                    <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                        <stop offset="0%" style="stop-color:#1a1a1a" />
+                        <stop offset="100%" style="stop-color:#000000" />
+                    </radialGradient>
+
+                    <!-- 彩虹流光渐变 -->
+                    <linearGradient id="ringGrad" x1="0%" y1="50%" x2="100%" y2="50%">
+                        <stop offset="0%" style="stop-color:#1DA1F2" />
+                        <stop offset="35%" style="stop-color:#7000FF" />
+                        <stop offset="65%" style="stop-color:#FF3399" />
+                        <stop offset="100%" style="stop-color:#FFCC00" />
+                    </linearGradient>
+
+                    <!-- 玻璃卡片渐变 -->
+                    <linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#ffffff; stop-opacity:0.18" />
+                        <stop offset="100%" style="stop-color:#ffffff; stop-opacity:0.03" />
+                    </linearGradient>
+
+                    <!-- 卡片边缘高亮 -->
+                    <linearGradient id="edgeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#ffffff; stop-opacity:0.5" />
+                        <stop offset="20%" style="stop-color:#ffffff; stop-opacity:0.1" />
+                        <stop offset="80%" style="stop-color:#ffffff; stop-opacity:0.1" />
+                        <stop offset="100%" style="stop-color:#ffffff; stop-opacity:0.4" />
+                    </linearGradient>
+
+                    <!-- 辉光滤镜 -->
+                    <filter id="glowLight" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="12" result="blur" />
+                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    </filter>
+                    
+                    <filter id="softBlur" x="-20%" y="-20%" width="140%" height="140%">
+                        <feGaussianBlur stdDeviation="25" />
+                    </filter>
+                </defs>
+
+                <!-- 1. 背景 -->
+                <rect width="512" height="512" fill="url(#bgGrad)" />
+                
+                <!-- 2. 背景网格 -->
+                <g opacity="0.05">
+                    <line x1="0" y1="128" x2="512" y2="128" stroke="white" stroke-width="1" />
+                    <line x1="0" y1="256" x2="512" y2="256" stroke="white" stroke-width="1" />
+                    <line x1="0" y1="384" x2="512" y2="384" stroke="white" stroke-width="1" />
+                    <line x1="128" y1="0" x2="128" y2="512" stroke="white" stroke-width="1" />
+                    <line x1="256" y1="0" x2="256" y2="512" stroke="white" stroke-width="1" />
+                    <line x1="384" y1="0" x2="384" y2="512" stroke="white" stroke-width="1" />
+                </g>
+
+                <!-- 3. 底层弥散光 -->
+                <circle cx="256" cy="256" r="160" fill="url(#ringGrad)" opacity="0.15" filter="url(#softBlur)" />
+
+                <!-- 4. 彩虹流光环 -->
+                <path d="M100 256 A156 156 0 1 1 412 256" stroke="url(#ringGrad)" stroke-width="12" stroke-linecap="round" fill="none" filter="url(#glowLight)" opacity="0.7" />
+                
+                <!-- 5. 玻璃态卡片 -->
+                <g transform="translate(86, 146)">
+                    <rect x="10" y="10" width="340" height="220" rx="35" fill="black" fill-opacity="0.5" filter="url(#softBlur)" />
+                    <rect width="340" height="220" rx="35" fill="url(#glassGrad)" stroke="url(#edgeGrad)" stroke-width="1.5" style="backdrop-filter: blur(12px);" />
+                    
+                    <circle cx="55" cy="55" r="18" fill="white" fill-opacity="0.6" />
+                    <rect x="85" y="46" width="100" height="7" rx="3.5" fill="white" fill-opacity="0.4" />
+                    <rect x="85" y="58" width="50" height="5" rx="2.5" fill="white" fill-opacity="0.2" />
+                    
+                    <rect x="40" y="105" width="260" height="10" rx="5" fill="white" fill-opacity="0.7" />
+                    <rect x="40" y="130" width="260" height="10" rx="5" fill="white" fill-opacity="0.4" />
+                    <rect x="40" y="155" width="160" height="10" rx="5" fill="white" fill-opacity="0.2" />
+                    
+                    <circle cx="55" cy="190" r="5" fill="white" fill-opacity="0.2" />
+                    <circle cx="105" cy="190" r="5" fill="white" fill-opacity="0.2" />
+                    <circle cx="155" cy="190" r="5" fill="white" fill-opacity="0.2" />
+                </g>
+
+                <!-- 6. 装饰性点缀 (替代了之前的星形) -->
+                <circle cx="420" cy="160" r="6" fill="#1DA1F2" filter="url(#glowLight)" />
+                <circle cx="440" cy="220" r="3" fill="#FF3399" opacity="0.6" />
+                <circle cx="390" cy="410" r="4" fill="white" opacity="0.4" />
+                <circle cx="415" cy="425" r="2" fill="white" opacity="0.2" />
+            </svg>
+        </div>
+    </div>
+
+    <button onclick="exportIcon()" class="btn-export">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        导出高清 PNG 图标
+    </button>
+
+    <p class="label">X Tweet Card APP Icon - 512x512</p>
+
+    <script>
+        async function exportIcon() {
+            const node = document.getElementById('export-target');
+            const btn = document.querySelector('.btn-export');
+            
+            // 更改按钮状态
+            const originalText = btn.innerHTML;
+            btn.innerText = "正在生成...";
+            btn.style.opacity = "0.7";
+            btn.disabled = true;
+
+            try {
+                // 使用 html-to-image 库将 DOM 节点转换为 PNG
+                // 我们在导出时设置较高的像素比例以确保高清
+                const dataUrl = await htmlToImage.toPng(node, {
+                    pixelRatio: 2, // 导出为 1024x1024
+                    backgroundColor: null // 保持透明度（如果外部圆角有透明）
+                });
+
+                // 创建下载链接
+                const link = document.createElement('a');
+                link.download = 'X_Tweet_Card_Icon.png';
+                link.href = dataUrl;
+                link.click();
+            } catch (error) {
+                console.error('导出失败:', error);
+                alert('导出图标时出错，请重试。');
+            } finally {
+                // 恢复按钮状态
+                btn.innerHTML = originalText;
+                btn.style.opacity = "1";
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 340 220">
+  <!-- Generator: Adobe Illustrator 29.1.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 142)  -->
+  <defs>
+    <style>
+      .st0 {
+        opacity: .4;
+      }
+
+      .st0, .st1 {
+        fill: #1da1f2;
+      }
+
+      .st0, .st1, .st2, .st3, .st4 {
+        isolation: isolate;
+      }
+
+      .st5 {
+        fill: url(#_未命名的渐变);
+      }
+
+      .st2 {
+        opacity: .1;
+      }
+
+      .st2, .st3, .st4 {
+        fill: #fff;
+      }
+
+      .st3 {
+        opacity: .1;
+      }
+
+      .st4 {
+        opacity: .2;
+      }
+    </style>
+    <linearGradient id="_未命名的渐变" data-name="未命名的渐变" x1="-456.6" y1="2.6" x2="-455.6" y2="3.6" gradientTransform="translate(155262 -578) scale(340 220)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1a1a1a"/>
+      <stop offset="1" stop-color="#000"/>
+    </linearGradient>
+  </defs>
+  <rect class="st5" width="340" height="220" rx="35" ry="35"/>
+  <circle class="st4" cx="55" cy="55" r="18"/>
+  <path class="st4" d="M88.5,46h93c1.9,0,3.5,1.6,3.5,3.5h0c0,1.9-1.6,3.5-3.5,3.5h-93c-1.9,0-3.5-1.6-3.5-3.5h0c0-1.9,1.6-3.5,3.5-3.5Z"/>
+  <path class="st2" d="M87.5,58h45c1.4,0,2.5,1.1,2.5,2.5h0c0,1.4-1.1,2.5-2.5,2.5h-45c-1.4,0-2.5-1.1-2.5-2.5h0c0-1.4,1.1-2.5,2.5-2.5Z"/>
+  <path class="st1" d="M45,105h250c2.8,0,5,2.2,5,5h0c0,2.8-2.2,5-5,5H45c-2.8,0-5-2.2-5-5h0c0-2.8,2.2-5,5-5Z"/>
+  <path class="st0" d="M45,130h250c2.8,0,5,2.2,5,5h0c0,2.8-2.2,5-5,5H45c-2.8,0-5-2.2-5-5h0c0-2.8,2.2-5,5-5Z"/>
+  <path class="st3" d="M45,155h150c2.8,0,5,2.2,5,5h0c0,2.8-2.2,5-5,5H45c-2.8,0-5-2.2-5-5h0c0-2.8,2.2-5,5-5Z"/>
+  <circle class="st3" cx="55" cy="190" r="5"/>
+  <circle class="st3" cx="105" cy="190" r="5"/>
+  <circle class="st3" cx="155" cy="190" r="5"/>
+</svg>

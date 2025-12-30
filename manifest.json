@@ -24,7 +24,9 @@
     "web_accessible_resources": [
         {
             "resources": [
-                "src/content/content.css"
+                "src/content/content.css",
+                "src/assets/card-dark.svg",
+                "src/assets/card-light.svg"
             ],
             "matches": [
                 "https://x.com/*",
