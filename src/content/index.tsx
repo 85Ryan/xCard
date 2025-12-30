@@ -216,17 +216,49 @@ function extractTweetData(article: Element): TweetData | null {
 
         const timestamp = article.querySelector('time')?.getAttribute('datetime') || '';
 
+        // Extract Quoted Tweet Container early to filter media
+        // Robust strategy: Find all link roles that look like tweet containers
+        const allLinks = Array.from(article.querySelectorAll('div[role="link"]'));
+        const quoteEl = allLinks.find(el => {
+            // Must contain a user name to be a valid quote block
+            const hasUserName = !!el.querySelector('[data-testid="User-Name"]');
+            // Must not be a simple text wrapper inside the main tweet
+            const isInsideMainText = el.closest('[data-testid="tweetText"]') !== null;
+            return hasUserName && !isInsideMainText;
+        });
+
         const media: string[] = [];
         article.querySelectorAll('[data-testid="tweetPhoto"] img').forEach(img => {
+            // Skip media that belongs to the quoted tweet
+            if (quoteEl && quoteEl.contains(img)) return;
+
             const src = img.getAttribute('src');
             if (src) media.push(src);
         });
 
         // Detect video poster
-        const videoPoster =
-            article.querySelector('[data-testid="videoPlayer"] img, [data-testid="videoComponent"] img')?.getAttribute('src') ||
-            article.querySelector('[data-testid="videoPlayer"] video')?.getAttribute('poster') ||
-            undefined;
+        // Filter out video elements inside the quoted tweet
+        const findVideoPoster = () => {
+            const candidates = [
+                ...Array.from(article.querySelectorAll('[data-testid="videoPlayer"] img, [data-testid="videoComponent"] img')),
+                ...Array.from(article.querySelectorAll('[data-testid="videoPlayer"] video'))
+            ];
+
+            for (const el of candidates) {
+                if (quoteEl && quoteEl.contains(el)) continue;
+
+                if (el.tagName === 'VIDEO') {
+                    const poster = el.getAttribute('poster');
+                    if (poster) return poster;
+                } else {
+                    const src = el.getAttribute('src');
+                    if (src) return src;
+                }
+            }
+            return undefined;
+        };
+
+        const videoPoster = findVideoPoster();
 
         const isGold = !!article.querySelector('svg[data-testid="icon-verified-gold"]');
         const isVerified = !!article.querySelector('svg[aria-label="Verified account"], svg[aria-label="认证账号"], svg[aria-label="Premium"]');
@@ -244,14 +276,7 @@ function extractTweetData(article: Element): TweetData | null {
         // Extract Quoted Tweet
         // Robust strategy: Find all link roles that look like tweet containers
         // We look for a container that has User-Name and is NOT the main tweet text container
-        const allLinks = Array.from(article.querySelectorAll('div[role="link"]'));
-        const quoteEl = allLinks.find(el => {
-            // Must contain a user name to be a valid quote block
-            const hasUserName = !!el.querySelector('[data-testid="User-Name"]');
-            // Must not be a simple text wrapper inside the main tweet
-            const isInsideMainText = el.closest('[data-testid="tweetText"]') !== null;
-            return hasUserName && !isInsideMainText;
-        });
+
 
         let quotedTweet: SubTweet | undefined;
         if (quoteEl) {
