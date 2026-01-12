@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
-import { X, Download, Copy, Paintbrush, Palette, Sun, Moon, AppWindowMac, CheckCircle, AlertCircle } from 'lucide-react';
+import { X, Download, Copy, Paintbrush, Palette, Sun, Moon, AppWindowMac, CheckCircle, AlertCircle, Grid } from 'lucide-react';
 import { toPng, toBlob } from 'html-to-image';
 import { t } from './i18n';
 import './content.css';
@@ -89,6 +89,8 @@ const BACKGROUNDS = [
     'linear-gradient(135deg, #FF9A8B 0%, #FF6A88 55%, #FF99AC 100%)', // Coral Silk
     'linear-gradient(135deg, #cb2d3e 0%, #ef473a 100%)', // Firewatch
 ];
+
+const TEXTURES = ['grid', 'dots', 'lines', 'wave'];
 
 const PADDINGS = {
     S: '30px',
@@ -426,6 +428,10 @@ const EditorOverlay = ({ data, onClose }: { data: TweetData, onClose: () => void
     const [processedData, setProcessedData] = useState<TweetData>(data);
     const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
 
+    // Texture State
+    const [enableTexture, setEnableTexture] = useState(true);
+    const [textureStyle, setTextureStyle] = useState('grid');
+
     // For Glass Blur Export
     const [glassBackground, setGlassBackground] = useState<string | null>(null);
     const [captureMode, setCaptureMode] = useState<'normal' | 'background-only'>('normal');
@@ -643,7 +649,7 @@ const EditorOverlay = ({ data, onClose }: { data: TweetData, onClose: () => void
                             style={{ background, padding: PADDINGS[padding] }}
                         >
                             {/* Texture layer */}
-                            <div className="xcard-bg-texture" />
+                            {enableTexture && <div className="xcard-bg-texture" data-texture={textureStyle} />}
                             {/* Glow blobs */}
                             <div className={`xcard-bg-glow xcard-glow-1`} />
                             <div className={`xcard-bg-glow xcard-glow-2`} />
@@ -819,6 +825,27 @@ const EditorOverlay = ({ data, onClose }: { data: TweetData, onClose: () => void
                         </div>
 
                         <div className="xcard-section">
+                            <div className="xcard-toggle-item">
+                                <label><Grid size={16} /> {t('texture')}</label>
+                                <ToggleSwitch active={enableTexture} onClick={() => setEnableTexture(!enableTexture)} />
+                            </div>
+
+                            {enableTexture && (
+                                <div className="xcard-toggle-group" style={{ marginTop: '12px' }}>
+                                    {TEXTURES.map(tex => (
+                                        <button
+                                            key={tex}
+                                            className={textureStyle === tex ? 'active' : ''}
+                                            onClick={() => setTextureStyle(tex)}
+                                        >
+                                            {t(tex)}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="xcard-section">
                             <label><Palette size={16} /> {t('appearance')}</label>
                             <div className="xcard-toggle-group">
                                 <button className={padding === 'S' ? 'active' : ''} onClick={() => setPadding('S')}>S</button>
@@ -882,7 +909,7 @@ const EditorOverlay = ({ data, onClose }: { data: TweetData, onClose: () => void
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     );
 };
 

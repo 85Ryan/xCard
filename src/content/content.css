@@ -651,12 +651,40 @@
 .xcard-bg-texture {
   position: absolute;
   inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Grid Texture (Default) */
+.xcard-bg-texture[data-texture="grid"] {
   background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
     repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.02) 0px, rgba(255, 255, 255, 0.02) 1px, transparent 1px, transparent 20px);
   background-size: 32px 32px, 32px 32px, 100% 100%;
-  pointer-events: none;
-  z-index: 1;
+}
+
+/* Dots Texture */
+.xcard-bg-texture[data-texture="dots"] {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Lines Texture */
+.xcard-bg-texture[data-texture="lines"] {
+  background-image: repeating-linear-gradient(45deg,
+      rgba(255, 255, 255, 0.05) 0px,
+      rgba(255, 255, 255, 0.05) 1px,
+      transparent 1px,
+      transparent 10px);
+}
+
+/* Wave Texture */
+.xcard-bg-texture[data-texture="wave"] {
+  background-image: repeating-radial-gradient(circle at 0 0,
+      transparent 0,
+      transparent 20px,
+      rgba(255, 255, 255, 0.05) 20px,
+      rgba(255, 255, 255, 0.05) 21px);
 }
 
 .xcard-bg-glow {
