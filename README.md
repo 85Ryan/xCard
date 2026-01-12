@@ -15,16 +15,36 @@
 - **Internationalization**: Fully localized for English, Chinese (Simplified/Traditional), Spanish, Portuguese, and Italian.
 - **Native Sync**: UI adapts to X.com's theme (Light/Dim/Dark).
 
-## Installation
+## How to Use
 
-1. Clone repo
-2. `pnpm install`
-3. `pnpm dev`
-4. Load unpacked extension in Chrome from `dist/`
+### Method 1: Download from GitHub Releases (Recommended)
 
-## Build for Release
+1. Go to the [Releases](https://github.com/85Ryan/xCard/releases) page.
+2. Download the latest `xCard.zip` file.
+3. Unzip the downloaded file.
+4. Open Chrome and navigate to `chrome://extensions/`.
+5. Enable **Developer mode** in the top right corner.
+6. Click **Load unpacked** and select the unzipped xCard folder.
 
-```bash
-# Auto-package for release
-bash release.sh
-```
+### Method 2: Development Mode
+
+If you want to contribute or modify the code:
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/85Ryan/xCard.git
+   ```
+2. Install dependencies:
+   ```bash
+   pnpm install
+   # or npm install
+   ```
+3. Start the development server:
+   ```bash
+   pnpm dev
+   # or npm run dev
+   ```
+4. Load the extension:
+   - Go to `chrome://extensions/`.
+   - Enable **Developer mode**.
+   - Click **Load unpacked** and select the `dist/` folder in the project directory.
